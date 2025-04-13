@@ -1,0 +1,18 @@
+services:
+  video-pipeline:
+    build: .
+    container_name: time_lapse
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      FTP_USER: ${FTP_USER}
+      FTP_PASSWD: ${FTP_PASSWD}
+      FTP_HOST: ${FTP_HOST}
+      FTP_PATH: ${FTP_PATH}
+      URL_UPLOAD: ${URL_UPLOAD}
+      URL_API: ${URL_API}
+    volumes:
+      - ./audio.mp3:/app/audio.mp3
+      - ./logo.png:/app/logo.png
+      - ./output:/app/output
+    restart: unless-stopped
