@@ -28,7 +28,7 @@ fi
 
 source "$WORK_PATH/.env"
 
-echo "Enviando capa \"${first_jpg}\" para \"$URL_UPLOAD/upload\".."
+echo "Enviando capa ${first_jpg}..."
 
 url_capa=$(curl -s --location "${URL_UPLOAD}/upload" \
   --form "file=@${first_jpg}" | jq -r '.filename')
@@ -38,7 +38,7 @@ if [ -z "${url_capa:-}" ]; then
   exit 1
 fi
 
-echo "Enviando vídeo..."
+echo "Enviando vídeo ${VIDEO_PATH}..."
 url_video=$(curl -s --location "${URL_UPLOAD}/upload" \
   --form "file=@${VIDEO_PATH}" | jq -r '.filename')
 
