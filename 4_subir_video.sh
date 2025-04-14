@@ -28,9 +28,10 @@ fi
 
 source "$WORK_PATH/.env"
 
-echo "Enviando capa..."
+echo "Enviando capa \"${first_jpg}\" para \"$URL_UPLOAD/upload\".."
+
 url_capa=$(curl -s --location "${URL_UPLOAD}/upload" \
-  --form "file=@${IMG_PATH}/${first_jpg}" | jq -r '.filename')
+  --form "file=@${first_jpg}" | jq -r '.filename')
 
 if [ -z "${url_capa:-}" ]; then
   echo "Erro: ao buscar url da capa."
@@ -47,14 +48,9 @@ if [ -z "${url_video:-}" ]; then
   exit 1
 fi
 
-echo "Registrando vídeo na API..."
-curl -s --location "${URL_API}/videos \
+echo "Registrando capa(${url_capa}) e vídeo (${url_video}) na API..."
+curl -s --location "${URL_API}/videos" \
   --header "Content-Type: application/json" \
-  --data "{
-    \"nome\": \"${NOME_VIDEO}\",
-    \"dthr\": \"${DIA}T23:59:59.000Z\",
-    \"url\": \"${url_video}\",
-    \"poster\": \"${url_capa}\",
-    \"idQuadra\": 1
-  }"
+  --data "{\"nome\":\"${NOME_VIDEO}\",\"dthr\":\"${DIA}T23:59:59.000Z\",\"url\":\"${url_video}\",\"poster\":\"${url_capa}\",\"idQuadra\":1}"
 
+echo "Registro finalizado com sucesso: ${NOME_VIDEO}"

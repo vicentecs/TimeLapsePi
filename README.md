@@ -12,8 +12,12 @@ Tudo empacotado num container Docker com suporte a CI via GitHub Actions 🚀
 ---
 
 ## 🛠 Requisitos
-- Docker
-- Docker Compose
+- sudo apt-get install -y \
+    ffmpeg \
+    curl \
+    lftp \
+    jq \
+    jpeginfo \
 
 ---
 
@@ -25,9 +29,7 @@ Tudo empacotado num container Docker com suporte a CI via GitHub Actions 🚀
 ├── logo.png            # Logo
 ├── output/             # Arquivos gerados
 ├── _start.sh           # Script principal
-├── [1-4]_*.sh          # Scripts auxiliares
-├── Dockerfile
-└── docker-compose.yml
+└── [1-4]_*.sh          # Scripts auxiliares
 ```
 
 ---
@@ -48,7 +50,7 @@ URL_API=https://localhost/api
 
 ## ▶️ Executando
 ```bash
-docker-compose up --build
+./_start
 ```
 
 ## ✅ Resultado

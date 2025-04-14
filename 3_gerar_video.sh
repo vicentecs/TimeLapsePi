@@ -4,14 +4,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+: "${WORK_PATH:?WORK_PATH nao definido}"
 : "${IMG_PATH:?IMG_PATH nao definido}"
 : "${VIDEO_PATH:?VIDEO_PATH nao definido}"
 
 # Arquivo de áudio
-AUDIO="${PASTA}audio.mp3"
+AUDIO="${WORK_PATH}/audio.mp3"
 
 # Arquivo da logo
-LOGO="${PASTA}logo.png"
+LOGO="" # "${WORK_PATH}/logo.png"
+
 # Largura desejada da logo (mantém proporção)
 LOGO_LARGURA=100
 
@@ -28,31 +30,24 @@ if ! command -v ffmpeg &> /dev/null; then
 fi
 
 # Verifica se o áudio existe
-if [ ! -f "$AUDIO" ]; then
-  echo "Arquivo de áudio \"$AUDIO\" não encontrado!"
+if [ -z "$AUDIO" ] || [ -f "$AUDIO" ]; then
+  echo "FFmpeg não está instalado. Instale com: sudo apt install ffmpeg"
   exit 1
 fi
 
-# Verifica se a logo existe
-if [ ! -f "$LOGO" ]; then
-  echo "Arquivo da logo \"$LOGO\" não encontrado!"
-  exit 1
-fi
+echo "Gerando vídeo ($VIDEO_PATH) ..."
 
-echo "Gerando vídeo..."
+#ffmpeg \
+#    -framerate 60 \
+#    -pattern_type glob \
+#    -i '${IMG_PATH}/*.jpg' \
+#    -i 'audio.mp3' -c:a aac -shortest
+#    -c:v libx264
+#    -pix_fmt yuv420p \
+#    -b:v 4M \
+#    -s 1920x1080 \
+#    "${VIDEO_PATH}" -y
 
-ffmpeg \
-    -framerate 60 \
-    -pattern_type glob \
-    -i "${IMG_PATH}/*.jpg" \
-    #-i "$AUDIO" \
-    #-i "$LOGO" \
-    #-filter_complex "[2:v]scale=${LOGO_LARGURA}:-1,format=rgba,colorchannelmixer=aa=${LOGO_OPACIDADE}[logo];[0:v][logo]overlay=${POSICAO_LOGO}" \
-    -c:v h264_v4l2m2m \
-    -b:v 6M \
-    -c:a aac \
-    -shortest \
-    -pix_fmt yuv420p \
-    "$VIDEO_PATH" -y
+ffmpeg -framerate 60 -pattern_type glob -i "${IMG_PATH}/*.jpg" -i "$AUDIO" -c:a aac -shortest -c:v libx264 -pix_fmt yuv420p -s 1920x1080 -b:v 4M "${VIDEO_PATH}" -y
 
 echo "Vídeo finalizado com sucesso: $VIDEO_PATH"
